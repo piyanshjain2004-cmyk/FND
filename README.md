@@ -1,15 +1,5 @@
 # Fake News Detection using Machine Learning
 
-## Table of Contents
-- [Introduction](#introduction)
-- [Problem Definition](#problem-definition)
-- [Project Structure](#project-structure)
-- [Datasets](#datasets)
-- [Model Name](#model-name)
-- [Images](#images)
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-
 ## Introduction
 This repository contains a comprehensive project for detecting fake news using machine learning techniques and various natural language processing techniques. The project includes data analysis, model training, and a web application for real-time fake news detection. The machine learning model is designed to classify news articles as either real or fake based on their content.
 
@@ -30,19 +20,16 @@ The repository is organized into the following directories and files:
 - **vector.pkl**: Pre-trained vectorizer for text data.
 
 ## Datasets 
-### train.csv
-A full training dataset with the following attributes:
-- `id`: unique id for a news article
-- `title`: the title of a news article
-- `author`: author of the news article
-- `text`: the text of the article; could be incomplete
-- `label`: a label that marks the article as potentially unreliable
-  - `1`: unreliable
-  - `0`: reliable
+The model is trained using two datasets:
 
-### test.csv
-A testing training dataset with all the same attributes as `train.csv` without the label.
+File	Description
+True.csv	Real news articles
+Fake.csv	Fake news articles
+Label Mapping
 
+0 → Real News
+
+1 → Fake News
 ## Model Name
 The machine learning model used for fake news detection in this project is the **Passive Aggressive Classifier**.
 
@@ -107,8 +94,5 @@ Access the application in your web browser by navigating to `http://localhost:50
 ---
 
 **Author**
-- ABHISHEK P P (https://github.com/abiek12)
+- Piyansh Jain (https://github.com/piyanshjain2004-cmyk)
 
-- If you have any questions or need further assistance, feel free to contact us at abhishekkanichery@gmail.com
-
----
