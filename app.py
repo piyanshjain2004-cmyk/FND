@@ -44,8 +44,8 @@ def preprocess(text):
 def train_model():
     print("Training model...")
 
-    true_df = pd.read_csv("True.csv")
-    fake_df = pd.read_csv("Fake.csv")
+    true_df = pd.read_csv("datasets/True.csv")
+    fake_df = pd.read_csv("datasets/Fake.csv")
 
     true_df["label"] = 0
     fake_df["label"] = 1
