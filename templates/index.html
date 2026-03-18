@@ -10,29 +10,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-1: #fff6e8;
-      --bg-2: #d9f0ff;
-      --bg-3: #ffe2d9;
-      --ink: #14213d;
-      --muted: #4a5568;
-      --accent: #0ea5a3;
-      --accent-2: #f97316;
-      --card: rgba(255, 255, 255, 0.78);
-      --stroke: rgba(20, 33, 61, 0.12);
-      --shadow: 0 18px 50px rgba(20, 33, 61, 0.15);
+      --bg-1: #fff7ea;
+      --bg-2: #daf1ff;
+      --bg-3: #ffe4dc;
+      --ink: #17233f;
+      --muted: #51607a;
+      --accent: #0f766e;
+      --card: rgba(255, 255, 255, 0.8);
+      --stroke: rgba(23, 35, 63, 0.12);
+      --shadow: 0 22px 55px rgba(23, 35, 63, 0.14);
     }
 
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: "Space Grotesk", sans-serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at 10% 10%, rgba(249, 115, 22, 0.22), transparent 30%),
-        radial-gradient(circle at 85% 15%, rgba(14, 165, 163, 0.2), transparent 33%),
-        linear-gradient(120deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
-      min-height: 100vh;
+        radial-gradient(circle at 12% 10%, rgba(249, 115, 22, 0.2), transparent 30%),
+        radial-gradient(circle at 82% 14%, rgba(14, 165, 233, 0.18), transparent 34%),
+        linear-gradient(125deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
       overflow-x: hidden;
     }
 
@@ -40,23 +40,34 @@
       content: "";
       position: fixed;
       inset: -120px;
-      background: conic-gradient(from 90deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
-      filter: blur(28px);
-      animation: rotateGlow 14s linear infinite;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 62%);
+      filter: blur(36px);
+      animation: drift 16s linear infinite;
       pointer-events: none;
       z-index: 0;
     }
 
-    @keyframes rotateGlow {
+    @keyframes drift {
       to { transform: rotate(1turn); }
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .page {
       position: relative;
       z-index: 1;
-      max-width: 1120px;
+      max-width: 1140px;
       margin: 0 auto;
-      padding: 24px 20px 60px;
+      padding: 24px 20px 64px;
     }
 
     .nav {
@@ -71,114 +82,119 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      text-decoration: none;
       color: var(--ink);
+      text-decoration: none;
       font-weight: 700;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.02em;
     }
 
     .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
       background: linear-gradient(140deg, var(--accent), #22d3ee);
       color: white;
-      box-shadow: 0 10px 24px rgba(14, 165, 163, 0.35);
-      font-weight: 700;
+      box-shadow: 0 10px 28px rgba(15, 118, 110, 0.35);
     }
 
     .nav-links {
       display: flex;
-      gap: 14px;
       flex-wrap: wrap;
+      gap: 12px;
     }
 
     .nav-links a {
-      text-decoration: none;
       color: var(--ink);
+      text-decoration: none;
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid transparent;
-      font-weight: 500;
-      transition: 0.2s ease;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     }
 
     .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.62);
       border-color: var(--stroke);
-      background: rgba(255,255,255,0.58);
+      transform: translateY(-1px);
     }
 
     .hero {
-      margin-top: 26px;
+      margin-top: 28px;
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1.15fr 0.85fr;
       gap: 22px;
       align-items: stretch;
     }
 
-    .hero-panel,
-    .stats-panel {
+    .panel {
       background: var(--card);
-      backdrop-filter: blur(8px);
       border: 1px solid var(--stroke);
-      border-radius: 24px;
+      border-radius: 28px;
+      backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
-      padding: 28px;
     }
 
-    .hero-panel {
-      animation: rise 0.85s 0.05s ease both;
+    .hero-copy,
+    .hero-side,
+    .section-card,
+    .timeline,
+    .summary {
+      animation: rise 0.85s ease both;
     }
 
-    .label {
+    .hero-copy {
+      padding: 30px;
+    }
+
+    .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 12px;
+      padding: 7px 12px;
       border-radius: 999px;
-      background: rgba(14, 165, 163, 0.13);
+      background: rgba(15, 118, 110, 0.12);
       color: #0f766e;
-      font-size: 12px;
+      font-size: 0.77rem;
       font-weight: 700;
-      letter-spacing: 0.5px;
       text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     h1 {
-      margin: 14px 0 12px;
+      margin: 16px 0 14px;
       font-family: "Fraunces", serif;
-      font-size: clamp(2rem, 4.8vw, 3.3rem);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
     }
 
-    .hero p {
+    .hero-copy p {
       margin: 0;
       color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.65;
+      font-size: 1.03rem;
+      line-height: 1.72;
+      max-width: 62ch;
     }
 
     .actions {
-      margin-top: 22px;
+      margin-top: 24px;
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
     }
 
     .btn {
-      text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      border-radius: 12px;
-      padding: 12px 18px;
+      padding: 13px 18px;
+      border-radius: 14px;
+      text-decoration: none;
       font-weight: 700;
       border: 1px solid transparent;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .btn:hover {
@@ -188,81 +204,196 @@
     .btn-primary {
       color: white;
       background: linear-gradient(120deg, var(--accent), #0ea5e9);
-      box-shadow: 0 12px 28px rgba(14, 165, 163, 0.35);
+      box-shadow: 0 14px 30px rgba(15, 118, 110, 0.28);
     }
 
     .btn-secondary {
       color: var(--ink);
+      background: rgba(255, 255, 255, 0.74);
       border-color: var(--stroke);
-      background: rgba(255,255,255,0.75);
     }
 
-    .stats-panel {
-      animation: rise 0.85s 0.2s ease both;
+    .hero-side {
+      padding: 22px;
       display: grid;
       gap: 14px;
-      align-content: start;
+      animation-delay: 0.14s;
     }
 
-    .stat {
-      padding: 14px 16px;
-      border-radius: 14px;
+    .mini-card {
+      padding: 18px;
+      border-radius: 18px;
       border: 1px solid var(--stroke);
-      background: rgba(255,255,255,0.7);
+      background: rgba(255, 255, 255, 0.72);
     }
 
-    .stat b {
+    .mini-card strong {
       display: block;
-      font-size: 1.25rem;
-      margin-bottom: 2px;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
     }
 
-    .stat span {
+    .mini-card p {
+      margin: 0;
       color: var(--muted);
-      font-size: 0.94rem;
+      line-height: 1.55;
+      font-size: 0.95rem;
     }
 
-    .showcase {
-      margin-top: 20px;
+    .score-band {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      animation: rise 0.9s 0.35s ease both;
+      gap: 10px;
     }
 
-    .chip {
-      border: 1px solid var(--stroke);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.75);
+    .score {
       padding: 14px;
-      font-size: 0.95rem;
-      color: #334155;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.58));
+      border: 1px solid var(--stroke);
+      text-align: center;
     }
 
-    @keyframes rise {
-      from {
-        opacity: 0;
-        transform: translateY(18px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .score b {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 4px;
     }
 
-    @media (max-width: 920px) {
-      .hero {
+    .score span {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .feature-grid {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .section-card {
+      padding: 22px;
+      animation-delay: 0.24s;
+    }
+
+    .section-card h2 {
+      margin: 0 0 10px;
+      font-family: "Fraunces", serif;
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+
+    .section-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.62;
+      font-size: 0.96rem;
+    }
+
+    .demo-strip {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+    }
+
+    .timeline,
+    .summary {
+      padding: 24px;
+    }
+
+    .timeline h2,
+    .summary h2 {
+      margin: 0 0 14px;
+      font-family: "Fraunces", serif;
+      letter-spacing: -0.03em;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background: rgba(255, 255, 255, 0.66);
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(140deg, rgba(15, 118, 110, 0.18), rgba(14, 165, 233, 0.14));
+      font-weight: 700;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .step p,
+    .summary-item {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .summary-item {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .summary-item strong {
+      color: var(--ink);
+    }
+
+    @media (max-width: 960px) {
+      .hero,
+      .demo-strip,
+      .feature-grid {
         grid-template-columns: 1fr;
       }
-      .showcase {
-        grid-template-columns: 1fr;
-      }
     }
 
-    @media (max-width: 560px) {
-      .page { padding: 18px 14px 40px; }
-      .hero-panel, .stats-panel { padding: 20px; border-radius: 18px; }
-      .nav { align-items: flex-start; flex-direction: column; }
+    @media (max-width: 620px) {
+      .page {
+        padding: 18px 14px 42px;
+      }
+
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-copy,
+      .hero-side,
+      .section-card,
+      .timeline,
+      .summary {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .score-band {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -275,48 +406,118 @@
       </a>
       <nav class="nav-links">
         <a href="/">Home</a>
-        <a href="/predict">Live Check</a>
+        <a href="/predict">Prediction</a>
+        <a href="/how-it-works">How It Works</a>
         <a href="/about">About</a>
       </nav>
     </header>
 
     <section class="hero">
-      <article class="hero-panel">
-        <span class="label">NLP + Evidence Signals</span>
-        <h1>Separate noise from verified reporting.</h1>
+      <article class="panel hero-copy">
+        <span class="eyebrow">Real-Time Credibility Checks</span>
+        <h1>Evaluate news content before it spreads.</h1>
         <p>
-          This detector combines machine learning classification with a lightweight evidence lookup layer,
-          giving you a clear real-time demo of how suspicious and reliable text patterns differ.
+          TruthLens helps readers, researchers, and digital teams quickly assess whether a headline, claim,
+          or article appears trustworthy. It combines machine learning with supporting evidence signals to
+          turn raw text into a fast, understandable credibility check.
         </p>
         <div class="actions">
-          <a class="btn btn-primary" href="/predict">Start Detecting</a>
-          <a class="btn btn-secondary" href="#about">How It Works</a>
+          <a class="btn btn-primary" href="/predict">Check Content</a>
+          <a class="btn btn-secondary" href="/about">Learn More</a>
         </div>
       </article>
 
-      <aside class="stats-panel" id="about">
-        <div class="stat">
-          <b>ML Classifier</b>
-          <span>TF-IDF + PassiveAggressive model for fake vs real text patterns.</span>
+      <aside class="panel hero-side">
+        <div class="mini-card">
+          <strong>Fast, Practical Analysis</strong>
+          <p>
+            Built for a clean, direct workflow so credibility checks feel simple from input to result.
+          </p>
         </div>
-        <div class="stat">
-          <b>Fact Signal</b>
-          <span>Fetches external evidence snippets and compares semantic overlap.</span>
+        <div class="score-band">
+          <div class="score">
+            <b>ML</b>
+            <span>Prediction engine</span>
+          </div>
+          <div class="score">
+            <b>NLP</b>
+            <span>Text feature analysis</span>
+          </div>
+          <div class="score">
+            <b>Fact</b>
+            <span>Evidence support</span>
+          </div>
         </div>
-        <div class="stat">
-          <b>Open Source</b>
-          <span>Code, model, and demo are all open source for learning and experimentation in the github repository "https://github.com/piyanshjain2004-cmyk/FND.git".</span>
+        <div class="mini-card">
+          <strong>Actionable Output</strong>
+          <p>
+            Results are presented in a format that is quick to read and easy to interpret.
+          </p>
+        </div>
       </aside>
     </section>
 
-    <section class="showcase">
-      <div class="chip">1. Built with Python, Flask, and scikit-learn.</div>
-      <div class="chip">2. Paste headline or short article text.</div>
-      <div class="chip">3. Get model verdict plus evidence confidence.</div>
-      <div class="chip">4. Open source links to discuss credibility.</div>
-      <div class="chip">5. Designed for educational use (more development is on the way).</div>
-      <div class="chip">6. Future for this project includes multi-language support and enhanced evidence signals.</div>
+    <section class="feature-grid">
+      <article class="panel section-card">
+        <h2>Intelligent Detection</h2>
+        <p>
+          The system uses natural language processing with TF-IDF feature extraction and a trained classifier
+          to identify patterns commonly associated with real and fake news text.
+        </p>
+      </article>
+      <article class="panel section-card">
+        <h2>Evidence-Aware Workflow</h2>
+        <p>
+          Beyond prediction, TruthLens adds supporting context so credibility checks feel more useful than a
+          simple binary label.
+        </p>
+      </article>
+      <article class="panel section-card">
+        <h2>User-Focused Interface</h2>
+        <p>
+          The product is designed for a smooth experience across discovery, analysis, and product background.
+        </p>
+      </article>
+    </section>
+
+    <section class="demo-strip">
+      <article class="panel timeline">
+        <h2>How It Works</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div>
+              <strong>Submit the content</strong>
+              <p>Paste a headline, claim, or paragraph into the analysis form.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div>
+              <strong>Process the text</strong>
+              <p>The classifier evaluates writing patterns and compares the content with learned examples.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div>
+              <strong>Review the result</strong>
+              <p>The output highlights predicted credibility in a format that is quick to understand.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="panel summary">
+        <h2>Why TruthLens</h2>
+        <div class="summary-list">
+          <div class="summary-item"><strong>Complete flow:</strong> from input to result in one smooth experience.</div>
+          <div class="summary-item"><strong>Technical depth:</strong> combines Flask, machine learning, and NLP concepts.</div>
+          <div class="summary-item"><strong>Clear output:</strong> built to help users make faster decisions around questionable content.</div>
+        </div>
+      </aside>
     </section>
   </main>
 </body>
 </html>
+

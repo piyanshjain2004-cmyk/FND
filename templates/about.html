@@ -10,15 +10,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-1: #f2fff2;
+      --bg-1: #f3fff2;
       --bg-2: #e8f2ff;
-      --bg-3: #fff5df;
-      --ink: #13233f;
-      --muted: #44536e;
+      --bg-3: #fff6e1;
+      --ink: #14213d;
+      --muted: #4d5d78;
       --accent: #0f766e;
       --panel: rgba(255, 255, 255, 0.82);
-      --line: rgba(19, 35, 63, 0.15);
-      --shadow: 0 18px 45px rgba(19, 35, 63, 0.14);
+      --line: rgba(20, 33, 61, 0.13);
+      --shadow: 0 20px 50px rgba(20, 33, 61, 0.14);
     }
 
     * { box-sizing: border-box; }
@@ -29,15 +29,26 @@
       font-family: "Space Grotesk", sans-serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at 12% 16%, rgba(34,197,94,0.2), transparent 35%),
-        radial-gradient(circle at 86% 12%, rgba(14,165,233,0.2), transparent 36%),
+        radial-gradient(circle at 12% 16%, rgba(34, 197, 94, 0.18), transparent 34%),
+        radial-gradient(circle at 86% 12%, rgba(14, 165, 233, 0.2), transparent 34%),
         linear-gradient(130deg, var(--bg-1), var(--bg-2) 56%, var(--bg-3));
     }
 
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .page {
-      max-width: 1080px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 24px 20px 46px;
+      padding: 24px 20px 52px;
     }
 
     .topbar {
@@ -45,6 +56,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 12px;
+      animation: rise 0.6s ease both;
     }
 
     .brand {
@@ -57,15 +69,15 @@
     }
 
     .brand i {
-      width: 38px;
-      height: 38px;
-      border-radius: 11px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
       display: grid;
       place-items: center;
-      background: linear-gradient(130deg, #0f766e, #14b8a6);
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
       color: white;
       font-style: normal;
-      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.35);
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.34);
     }
 
     nav {
@@ -77,83 +89,204 @@
     nav a {
       text-decoration: none;
       color: var(--ink);
-      padding: 9px 13px;
+      padding: 9px 14px;
       border-radius: 999px;
       border: 1px solid transparent;
-      transition: all .2s ease;
+      transition: background 0.2s ease, border-color 0.2s ease;
     }
 
     nav a:hover {
+      background: rgba(255, 255, 255, 0.62);
       border-color: var(--line);
-      background: rgba(255,255,255,.68);
+    }
+
+    .hero,
+    .block {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
     }
 
     .hero {
-      margin-top: 20px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      padding: 28px;
+      margin-top: 22px;
+      padding: 30px;
+      animation: rise 0.78s ease both;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.12);
+      color: #0f766e;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     h1 {
-      margin: 0;
+      margin: 16px 0 12px;
       font-family: "Fraunces", serif;
-      font-size: clamp(2rem, 4.6vw, 3rem);
-      letter-spacing: -0.03em;
-      line-height: 1.05;
+      font-size: clamp(2.2rem, 4.8vw, 3.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
     }
 
     .subtitle {
-      margin-top: 12px;
+      margin: 0;
+      max-width: 72ch;
       color: var(--muted);
-      line-height: 1.6;
-      max-width: 78ch;
-    }
-
-    .grid {
-      margin-top: 18px;
-      display: grid;
-      gap: 14px;
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.74);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 15px;
-    }
-
-    .card b {
-      display: block;
-      margin-bottom: 8px;
-      color: #0f172a;
+      line-height: 1.72;
       font-size: 1rem;
     }
 
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 0.95rem;
+    .stats {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
     }
 
-    .footer {
-      margin-top: 18px;
-      color: #556177;
+    .stat {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
       font-size: 0.9rem;
     }
 
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
+    .grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
 
-    @media (max-width: 560px) {
-      .page { padding: 18px 12px 32px; }
-      .hero { padding: 18px; border-radius: 18px; }
-      .topbar { flex-direction: column; align-items: flex-start; }
+    .block {
+      padding: 24px;
+      animation: rise 0.88s ease both;
+    }
+
+    .block h2,
+    .team h2 {
+      margin: 0 0 12px;
+      font-family: "Fraunces", serif;
+      letter-spacing: -0.03em;
+    }
+
+    .block p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .item {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--muted);
+      line-height: 1.58;
+    }
+
+    .item strong {
+      color: var(--ink);
+    }
+
+    .team {
+      margin-top: 20px;
+      padding: 24px;
+      animation: rise 0.98s ease both;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .member {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+      text-align: center;
+    }
+
+    .member strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .member span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .repo {
+      margin-top: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0f766e, #0ea5e9);
+      box-shadow: 0 14px 28px rgba(15, 118, 110, 0.26);
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .stats,
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        padding: 18px 14px 38px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero,
+      .block,
+      .team {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .stats,
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -164,37 +297,106 @@
       <nav>
         <a href="/">Home</a>
         <a href="/predict">Prediction</a>
+        <a href="/how-it-works">How It Works</a>
         <a href="/about">About</a>
       </nav>
     </header>
 
     <section class="hero">
-      <h1>About This Project</h1>
+      <span class="eyebrow">About TruthLens</span>
+      <h1>TruthLens is a web platform for faster, clearer news credibility analysis.</h1>
       <p class="subtitle">
-        TruthLens is a fake news detection demo built for educational and presentation use. It combines a supervised NLP classifier with a lightweight evidence signal to show how textual patterns and external context can support credibility analysis.
+        Misinformation moves quickly across digital platforms, and evaluating claims manually can be slow.
+        TruthLens brings machine learning, natural language processing, and evidence-aware analysis together in a
+        simple interface that helps users review suspicious content more efficiently.
       </p>
 
-      <div class="grid">
-        <article class="card">
-          <b>Model Layer</b>
-          <p>TF-IDF features with a PassiveAggressive classifier trained on labeled real/fake news examples.</p>
-        </article>
-        <article class="card">
-          <b>Fact Signal Layer</b>
-          <p>Retrieves external evidence snippets and compares semantic similarity with the submitted claim.</p>
-        </article>
-        <article class="card">
-          <b>Current Scope</b>
-          <p>Designed as a demonstration system. Results should be treated as indicators, not final truth judgments.</p>
-        </article>
+      <div class="stats">
+        <div class="stat">
+          <strong>Flask</strong>
+          <span>Web application framework</span>
+        </div>
+        <div class="stat">
+          <strong>TF-IDF</strong>
+          <span>Text feature extraction</span>
+        </div>
+        <div class="stat">
+          <strong>Classifier</strong>
+          <span>Prediction of fake vs real</span>
+        </div>
+        <div class="stat">
+          <strong>Evidence</strong>
+          <span>Supportive credibility cues</span>
+        </div>
       </div>
 
-      <p class="footer">
-        This project is open source and available on GitHub for learning and experimentation: <a href="https://github.com/piyanshjain2004-cmyk/FND.git" target="_blank">GitHub Repository</a>
-      </p>
-      <b>Developed by:-</b> <u>1.Piyansh Jain </u> , <u>2.Nikhil Pandey</u>, <u>3. Puneet Kumar Saini</u>, <u>4. Sachin Kumar</u> 
-    
+      <a class="repo" href="https://github.com/piyanshjain2004-cmyk/FND.git" target="_blank" rel="noopener noreferrer">View GitHub Repository</a>
+    </section>
+
+    <section class="grid">
+      <article class="block">
+        <h2>What It Does</h2>
+        <p>
+          TruthLens accepts a headline, claim, or article snippet and returns a credibility-focused prediction
+          based on learned text patterns. The goal is to make early-stage verification faster and easier for users
+          who want a quick signal before trusting or sharing content.
+        </p>
+      </article>
+
+      <article class="block">
+        <h2>Core Capabilities</h2>
+        <div class="list">
+          <div class="item"><strong>Machine Learning:</strong> trained classification for real and misleading news patterns.</div>
+          <div class="item"><strong>Natural Language Processing:</strong> transforms raw text into usable model features.</div>
+          <div class="item"><strong>Evidence Signals:</strong> supports prediction with context-oriented credibility cues.</div>
+          <div class="item"><strong>Web Interface:</strong> simple navigation for checking content and understanding the product.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="block">
+        <h2>Why It Matters</h2>
+        <p>
+          Fake news affects public opinion, decision making, and trust in information sources. TruthLens addresses
+          this challenge by helping users identify questionable claims earlier. It is designed as a practical tool
+          for people who want a faster first-pass credibility check on the content they read online.
+        </p>
+      </article>
+
+      <article class="block">
+        <h2>Platform Scope</h2>
+        <div class="list">
+          <div class="item"><strong>Input:</strong> users paste a headline, claim, or short article text.</div>
+          <div class="item"><strong>Processing:</strong> the backend evaluates linguistic patterns and credibility indicators.</div>
+          <div class="item"><strong>Output:</strong> the interface returns a clean prediction result for quick review.</div>
+          <div class="item"><strong>Future Growth:</strong> more datasets, better evidence integration, and broader language support.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="block team">
+      <h2>Developed By</h2>
+      <div class="team-grid">
+        <div class="member">
+          <strong>Piyansh Jain</strong>
+          <span>Team Member</span>
+        </div>
+        <div class="member">
+          <strong>Nikhil Pandey</strong>
+          <span>Team Member</span>
+        </div>
+        <div class="member">
+          <strong>Puneet Kumar Saini</strong>
+          <span>Team Member</span>
+        </div>
+        <div class="member">
+          <strong>Sachin Kumar</strong>
+          <span>Team Member</span>
+        </div>
+      </div>
     </section>
   </main>
 </body>
 </html>
+
