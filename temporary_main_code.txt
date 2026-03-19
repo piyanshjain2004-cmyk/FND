@@ -1,0 +1,205 @@
+from flask import Flask, render_template, request
+import json
+import math
+import os
+import pickle
+import re
+
+import nltk
+import pandas as pd
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import PassiveAggressiveClassifier
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+)
+from sklearn.model_selection import train_test_split
+
+nltk.download("punkt")
+nltk.download("stopwords")
+nltk.download("wordnet")
+nltk.download("omw-1.4")
+
+app = Flask(__name__)
+
+lemmatizer = WordNetLemmatizer()
+stop_words = set(stopwords.words("english"))
+
+
+def preprocess(text):
+    text = re.sub(r"[^a-zA-Z\s]", "", str(text))
+    text = text.lower()
+    words = nltk.word_tokenize(text)
+    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
+    return " ".join(words)
+
+
+def train_model():
+    true_df = pd.read_csv("datasets/True.csv")
+    fake_df = pd.read_csv("datasets/Fake.csv")
+
+    true_df["label"] = 0
+    fake_df["label"] = 1
+
+    data = pd.concat([true_df, fake_df]).sample(frac=1, random_state=42).reset_index(drop=True)
+    data["content"] = data["title"].fillna("") + " " + data["text"].fillna("")
+    data["content"] = data["content"].apply(preprocess)
+
+    X_train_text, X_test_text, y_train, y_test = train_test_split(
+        data["content"],
+        data["label"],
+        test_size=0.2,
+        random_state=42,
+        stratify=data["label"],
+    )
+
+    vector = TfidfVectorizer(max_features=5000)
+    X_train = vector.fit_transform(X_train_text)
+    X_test = vector.transform(X_test_text)
+
+    model = PassiveAggressiveClassifier(max_iter=1000, random_state=42)
+    model.fit(X_train, y_train)
+
+    y_pred = model.predict(X_test)
+    metrics = {
+        "accuracy": round(accuracy_score(y_test, y_pred), 4),
+        "precision_fake": round(precision_score(y_test, y_pred, pos_label=1), 4),
+        "recall_fake": round(recall_score(y_test, y_pred, pos_label=1), 4),
+        "f1_fake": round(f1_score(y_test, y_pred, pos_label=1), 4),
+        "confusion_matrix": confusion_matrix(y_test, y_pred).tolist(),
+    }
+
+    with open("model.pkl", "wb") as model_file:
+        pickle.dump(model, model_file)
+    with open("vector.pkl", "wb") as vector_file:
+        pickle.dump(vector, vector_file)
+    with open("metrics.json", "w", encoding="utf-8") as metrics_file:
+        json.dump(metrics, metrics_file, indent=2)
+
+    return model, vector, metrics
+
+
+if os.path.exists("model.pkl") and os.path.exists("vector.pkl"):
+    with open("model.pkl", "rb") as model_file:
+        model = pickle.load(model_file)
+    with open("vector.pkl", "rb") as vector_file:
+        vector = pickle.load(vector_file)
+
+    if os.path.exists("metrics.json"):
+        with open("metrics.json", "r", encoding="utf-8") as metrics_file:
+            metrics = json.load(metrics_file)
+    else:
+        metrics = None
+else:
+    model, vector, metrics = train_model()
+
+
+def fake_news_det(news):
+    processed = preprocess(news)
+    vect = vector.transform([processed])
+    pred = model.predict(vect)
+    return pred, vect, processed
+
+
+def build_prediction_details(news):
+    pred, vect, processed = fake_news_det(news)
+    label = "Fake News" if pred[0] == 1 else "Real News"
+
+    score = float(model.decision_function(vect)[0])
+    confidence = round(50 + 50 * math.tanh(abs(score)), 2)
+
+    feature_names = vector.get_feature_names_out()
+    vocab_weights = model.coef_[0]
+    indices = vect.nonzero()[1]
+
+    contributions = []
+    for idx in indices:
+        tfidf_value = vect[0, idx]
+        weight = vocab_weights[idx]
+        contribution = float(tfidf_value * weight)
+        contributions.append((feature_names[idx], contribution))
+
+    if label == "Fake News":
+        ranked_terms = sorted(
+            [item for item in contributions if item[1] > 0],
+            key=lambda item: item[1],
+            reverse=True,
+        )
+    else:
+        ranked_terms = sorted(
+            [item for item in contributions if item[1] < 0],
+            key=lambda item: item[1],
+        )
+
+    top_terms = [term for term, _ in ranked_terms[:3]]
+    if top_terms:
+        reason = (
+            "The model found stronger alignment with "
+            f"{label.lower()} language patterns through terms such as {', '.join(top_terms)}."
+        )
+    else:
+        reason = (
+            "The model relied more on overall text structure and language distribution because there were "
+            "fewer strongly weighted terms in the input."
+        )
+
+    processed_terms = processed.split()
+    informative_terms = len(indices)
+    metrics_accuracy = metrics.get("accuracy") if isinstance(metrics, dict) else None
+
+    evidence_points = [
+        f"Processed word count: {len(processed_terms)}",
+        f"Informative terms used by the model: {informative_terms}",
+        f"Decision margin score: {score:.3f}",
+    ]
+
+    if top_terms:
+        evidence_points.append(f"Top signal terms: {', '.join(top_terms)}")
+    if metrics_accuracy is not None:
+        evidence_points.append(f"Reference test accuracy: {round(metrics_accuracy * 100, 2)}%")
+
+    return {
+        "prediction_text": f"Prediction: {label}",
+        "prediction_label": label,
+        "confidence": confidence,
+        "reason": reason,
+        "evidence_points": evidence_points,
+    }
+
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
+@app.route("/how-it-works")
+def how_it_works():
+    return render_template("how_it_works.html", metrics=metrics)
+
+
+@app.route("/predict", methods=["GET", "POST"])
+def predict():
+    if request.method == "POST":
+        message = request.form.get("news")
+
+        if not message:
+            return render_template("prediction.html", prediction_text="No input provided")
+
+        details = build_prediction_details(message)
+        return render_template("prediction.html", **details)
+
+    return render_template("prediction.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
