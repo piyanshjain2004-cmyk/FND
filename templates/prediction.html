@@ -272,6 +272,7 @@
 
     .result-card {
       animation-delay: 0.12s;
+      padding: 22px;
     }
 
     .tag {
@@ -287,16 +288,57 @@
     }
 
     .output {
-      margin-top: 14px;
-      min-height: 210px;
-      padding: 16px;
+      margin-top: 12px;
+      min-height: 132px;
+      padding: 14px 16px;
       border-radius: 18px;
       border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.84);
       color: #273449;
-      line-height: 1.62;
+      line-height: 1.55;
       white-space: pre-wrap;
       word-break: break-word;
+    }
+
+    .verification-box {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(15, 118, 110, 0.2);
+      background: linear-gradient(135deg, rgba(15, 118, 110, 0.12), rgba(14, 165, 233, 0.08));
+    }
+
+    .verification-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .verification-head b {
+      font-size: 0.98rem;
+    }
+
+    .verification-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(15, 118, 110, 0.16);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #0f766e;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .verification-copy {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.93rem;
     }
 
     .panel-list {
@@ -347,6 +389,51 @@
       color: var(--ink);
     }
 
+    .api-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .api-card {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .api-card span {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+    }
+
+    .api-card strong {
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .api-links {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .api-links a {
+      color: #0b63b6;
+      text-decoration: none;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .api-links a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 920px) {
       .layout {
         grid-template-columns: 1fr;
@@ -374,11 +461,17 @@
       }
 
       .output {
-        min-height: 180px;
+        min-height: 112px;
       }
 
-      .result-grid {
+      .result-grid,
+      .api-grid {
         grid-template-columns: 1fr;
+      }
+
+      .verification-head {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -435,26 +528,49 @@
         <span class="tag">Analysis Result</span>
         <div class="output">{{ prediction_text if prediction_text else "The prediction result will appear here after you submit the news text." }}</div>
         {% if prediction_text %}
+        <div class="verification-box">
+          <div class="verification-head">
+            <b>Live Verification Summary</b>
+            <span class="verification-badge">{{ api_result if api_result else "Not Available" }}</span>
+          </div>
+          <div class="verification-copy">
+            {{ api_reason if api_reason else "No live verification summary available." }}
+          </div>
+        </div>
+        <div class="api-grid">
+          <div class="api-card">
+            <span>Model Result</span>
+            <strong>{{ model_label if model_label else prediction_label }}</strong>
+          </div>
+          <div class="api-card">
+            <span>Online Verification</span>
+            <strong>{{ api_result if api_result else "Not Available" }}</strong>
+          </div>
+        </div>
         <div class="result-grid">
           <div class="result-metric">
             <span>Prediction Confidence</span>
             <strong>{{ confidence }}%</strong>
           </div>
           <div class="result-metric">
-            <span>Classification</span>
+            <span>Final Classification</span>
             <strong>{{ prediction_label }}</strong>
           </div>
         </div>
         <div class="panel-list">
-          <div class="panel-item"><strong>Reason:</strong> {{ reason }}</div>
+          {% if api_query or api_articles %}
           <div class="panel-item">
-            <strong>Evidence Signals:</strong>
-            {% if evidence_points %}
-              {{ evidence_points | join(' | ') }}
-            {% else %}
-              No additional evidence signals available.
+            <strong>Online Sources:</strong>
+            {% if api_query %} Query used: {{ api_query }}. {% endif %}
+            {% if api_articles %}
+            <div class="api-links">
+              {% for article in api_articles %}
+                <a href="{{ article.link }}" target="_blank" rel="noopener noreferrer">{{ article.title }}{% if article.source %} - {{ article.source }}{% endif %}{% if article.score is defined %} (score {{ article.score }}){% endif %}</a>
+              {% endfor %}
+            </div>
             {% endif %}
           </div>
+          {% endif %}
         </div>
         {% else %}
         <div class="panel-list">

@@ -19,6 +19,8 @@ from services.text_preprocessing import preprocess
 MODEL_PATH = "model.pkl"
 VECTOR_PATH = "vector.pkl"
 METRICS_PATH = "metrics.json"
+MODEL_META_PATH = "model_meta.json"
+MODEL_VERSION = "truthlens-passiveaggressive-v1"
 
 
 def train_model():
@@ -51,10 +53,10 @@ def train_model():
 
     y_pred = model.predict(X_test)
     metrics = {
-        "accuracy": round(accuracy_score(y_test, y_pred), 4),
-        "precision_fake": round(precision_score(y_test, y_pred, pos_label=1), 4),
-        "recall_fake": round(recall_score(y_test, y_pred, pos_label=1), 4),
-        "f1_fake": round(f1_score(y_test, y_pred, pos_label=1), 4),
+        "accuracy": round(float(accuracy_score(y_test, y_pred)), 4),
+        "precision_fake": round(float(precision_score(y_test, y_pred, pos_label=1)), 4),
+        "recall_fake": round(float(recall_score(y_test, y_pred, pos_label=1)), 4),
+        "f1_fake": round(float(f1_score(y_test, y_pred, pos_label=1)), 4),
         "confusion_matrix": confusion_matrix(y_test, y_pred).tolist(),
     }
 
@@ -64,6 +66,8 @@ def train_model():
         pickle.dump(vector, vector_file)
     with open(METRICS_PATH, "w", encoding="utf-8") as metrics_file:
         json.dump(metrics, metrics_file, indent=2)
+    with open(MODEL_META_PATH, "w", encoding="utf-8") as meta_file:
+        json.dump({"version": MODEL_VERSION}, meta_file, indent=2)
 
     print("Model trained and saved.")
     print("Evaluation metrics:", metrics)
@@ -72,7 +76,17 @@ def train_model():
 
 
 def load_or_train_model():
-    if os.path.exists(MODEL_PATH) and os.path.exists(VECTOR_PATH):
+    if (
+        os.path.exists(MODEL_PATH)
+        and os.path.exists(VECTOR_PATH)
+        and os.path.exists(MODEL_META_PATH)
+    ):
+        with open(MODEL_META_PATH, "r", encoding="utf-8") as meta_file:
+            meta = json.load(meta_file)
+
+        if meta.get("version") != MODEL_VERSION:
+            return train_model()
+
         print("Loading existing model...")
         with open(MODEL_PATH, "rb") as model_file:
             model = pickle.load(model_file)

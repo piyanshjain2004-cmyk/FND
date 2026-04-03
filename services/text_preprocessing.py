@@ -1,13 +1,25 @@
 import re
 
 import nltk
+from nltk import data
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-nltk.download("punkt")
-nltk.download("stopwords")
-nltk.download("wordnet")
-nltk.download("omw-1.4")
+
+def ensure_nltk_resource(resource_path, download_name):
+    try:
+        data.find(resource_path)
+    except LookupError:
+        try:
+            nltk.download(download_name, quiet=True)
+        except Exception:
+            pass
+
+
+ensure_nltk_resource("tokenizers/punkt", "punkt")
+ensure_nltk_resource("corpora/stopwords", "stopwords")
+ensure_nltk_resource("corpora/wordnet", "wordnet")
+ensure_nltk_resource("corpora/omw-1.4", "omw-1.4")
 
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words("english"))
