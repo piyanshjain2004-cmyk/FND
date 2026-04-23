@@ -3,6 +3,6 @@ services:
     name: truthlens-fnd
     runtime: python
     plan: free
-    buildCommand: pip install -r requirements.txt && python -m nltk.downloader punkt stopwords wordnet omw-1.4
-    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120
     autoDeploy: true

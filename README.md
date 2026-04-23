@@ -43,9 +43,8 @@ This project is configured for Render with [`render.yaml`](./render.yaml).
 ### Important
 
 - Free services can sleep when inactive, so first request after idle time can be slow.
-- This app downloads required NLTK resources during build.
 - Start command on Render:
-  `gunicorn app:app --bind 0.0.0.0:$PORT`
+  `gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120`
 
 ## Notes
 
