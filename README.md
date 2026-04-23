@@ -29,6 +29,24 @@ pip install -r requirements.txt
 python app.py
 ```
 
+## Deploy Free on Render
+
+This project is configured for Render with [`render.yaml`](./render.yaml).
+
+1. Push this repository to GitHub.
+2. Go to Render dashboard and choose **New +** -> **Blueprint**.
+3. Connect your GitHub repo and select this project.
+4. Render will detect `render.yaml` and create a free Python web service.
+5. After build and deploy complete, you will get a public URL like:
+   `https://truthlens-fnd.onrender.com`
+
+### Important
+
+- Free services can sleep when inactive, so first request after idle time can be slow.
+- This app downloads required NLTK resources during build.
+- Start command on Render:
+  `gunicorn app:app --bind 0.0.0.0:$PORT`
+
 ## Notes
 
 - The model is loaded from saved files if available.
